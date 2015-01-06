@@ -544,3 +544,121 @@ x
 *** 
 
 ## Connections Interfaces to the Outside World
+There are many way that we can interface R with the outside world 
+###Interfaces to the Outside World
+Data are read in using connection interfaces. Connections can be made to files (most common) ro to other more exotic things.
+
+* file, opens a connection to a file
+* gzfile, opens a connection to a file compressed with gzip
+* bzfile, opens a connection to a file compressed with bzip2
+* url, opens a connection to a webpage
+
+> What we can understand from saying "Connection"?
+  It is all types of interaction tha R and computer does.
+  For instance, we have learned read.table, what R does is it goes to the specific folder which we put a file in it and opens that file and read the file and return the data. This is an example of an connection
+  
+### File Connections
+```R
+str(file)
+# function (description = "", open = "", blocking = TRUE, 
+#           encoding = getOption("encoding"), 
+```
+* description is the name of the file 
+* open is a code indicating
+  - "r"  read only
+  - "w" writing(and initializing a new file)
+  - "a" appending
+  - "rb", "wb", "ab" reading, writing, or appending in binary mode for windows
+
+In general, connections are powerful tools that let you navigate files or other external objects. In practice, we often don't need to deal with the connection interface directly.
+
+```R 
+con <- file("foo.txt", "r")
+data <- read.csv(con)
+close(con)
+
+# Does the same thing as 
+
+data <- read.csv("foo.txt")
+```
+In this case using a connection is not a best option the second one is better.
+
+But sometimes using a connection is the only smart chose to go with like here:
+```R
+con <-gzfile("words.gz")
+x <- readLines(con, 10)
+x
+```
+If you want to read a __part__ of a file such as example above, using a connection is very smart things to use. 
+
+> writeLines takes a character vector and writes each element one line at a time to a text file.
+
+
+You can also use readLines to read lines from a webpage...
+```R
+  ## However this may take some time
+con <- url("http://www.jhsph.edu", "r")
+x <- readLines(con)
+head(x)
+# [1] "<!DOCTYPE html>"                                               
+# [2] "<html lang=\"en\">"                                            
+# [3] ""                                                              
+# [4] "<head>"                                                        
+# [5] "<meta charset=\"utf-8\" />"                                    
+# [6] "<title>Johns Hopkins Bloomberg School of Public Health</title"
+```
+
+***
+
+## Subsetting R Objects
+### Basics
+####Subsetting
+There are a number of operators that can be used to extract subsets of R objects.
+* "[" always returns an object of the same class as the original; can be used to select more than one element 
+* "[[" is used to extract elements of a list or a data frame; it can oly be used to extract a single element and the class of the returned object will not necessarily be a list or data frame
+* "$" is used to extract elements of a list or data frame by name; semantics are similar to hat of"[["
+
+### Subsetting Lists
+```R
+x <- list(foo = 1:4, bar = 0.6)
+x[1]
+# $foo
+# [1] 1 2 3 4
+
+x[[1]]
+# [1] 1 2 3 4
+
+x$bar
+# [1] 0.6
+
+x[["bar"]]
+# [1] 0.6
+
+x["bar"]
+# $bar
+# [1] 0.6
+```
+
+```R
+x <- list(foo = 1:4, bar = 0.6, baz = "hello")
+name <- "foo"
+x[[name]] ##Computed index for 'foo'
+# [1] 1 2 3 4 
+
+x$name    ## element 'name' doesn't exist!
+# NULL
+
+x$foo     ## element 'foo' does exist
+# [1] 1 2 3 4 
+```
+```R
+x <- list(a = list(10, 12, 14), b = c(3.14, 2.81))
+x[[c(1, 3)]]
+# [1] 14
+
+x[[1]][[3]]
+# [1] 14
+
+x[[c(2, 1)]]
+# [1] 3.14
+```
