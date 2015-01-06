@@ -234,17 +234,17 @@ Lists are a special type of vector that can containn elements of different class
 ```R
 x <- list(1, "a", TRUE, 1+4i)
 x
-"[[1]]
-[1] 1
-
-[[2]]
-[1] "a"
-
-[[3]]
-[1] TRUE
-
-[[4]]
-[1] 1+4i"
+# [[1]]
+# [1] 1
+#
+# [[2]]
+# [1] "a"
+#
+# [[3]]
+# [1] TRUE
+#
+# [[4]]
+# [1] 1+4i"
 ```
 #### Matrices
 Matrices are vectors with a dimension attribute. The dimension attribute is itself an integer vector of lenght 2(nrow, ncol)
