@@ -130,7 +130,8 @@ print(x) # explicit printing
 x <- 1:20 # colon operator is used for creating a sequence
 x
 ```
-: colon operator is used for creating a sequence
+':' colon operator is used for creating a sequence
+
 =============================================================
 ## R data Types
 ### Objects and Attributes
