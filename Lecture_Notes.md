@@ -498,3 +498,49 @@ Before working on your data set it will be very helpful to calculate approximate
 
 ***
 
+## Textual Data Formats
+### Textual Formats
+* dumping and dputing are useful because the resulting textual format is edit-able, and in the case of corruption, potentially recoverable
+* Unlike writing out a table or csv file, dump and dput preserve the metadata(sacrificing some readibility), so that another user doesn't have to specifiy it all over again.
+* Textual formats can work much better with version control program slike subversion or git which can only track changes meaningfully in text files
+* Textual formats can be longer-lived; if there is corruption somewhere in the file, it can be easier to fix the proble,
+* Textual formats adhere to the "Unix philosophy"
+* Downside: The format is not very space-efficient
+
+### dput-ting R Objects
+Another way to pass data around is by deparsin the R object with dput and reading it back in using dget.
+
+```R
+y <- data.frame(a = 1, b = "a")
+dput(y)
+# structure(list(a = 1,
+#                 b = structure(1L, .Label = "a",
+#                              class = "factor")),
+#            .Names = c("a", "b"), row.names = c(NA, -1L),
+#            class = "data.frame")
+dput(y, file = "y.R")
+new.y <- dget("y.R")
+new.y
+#   a b
+# 1 1 a
+```
+I did not get this part(?) -Ask in the forums // search in the stack overflow-
+
+### Dumping R Objects
+Miltiple objects can be deparsed using the dump function and read back in using source
+
+```R
+x <- "foo"
+y <- data.frame(a = 1, b = "a")
+dump(c("x", "y"), file = "data.R")
+rm(x, y)
+source("data.R")
+y
+#   a b
+# 1 1 a
+x
+```
+
+*** 
+
+## Connections Interfaces to the Outside World
