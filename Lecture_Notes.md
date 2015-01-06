@@ -135,3 +135,33 @@ x
 =============================================================
 ## R data Types
 ### Objects and Attributes
+#### Objects
+R has five basic or "atomic" classes of objects:
+* Character
+* Numeric(real numbers)
+* Integer
+* Complex
+* Logical(True/False)
+
+The most basic object is a vector
+* A vector can only _contain_ __objects of the same class__
+* But: The one exception is a list, which is represented as a vector but can contain obkects of different classes
+
+Empty vectors can be created with the vector() function 
+
+#### Numbers
+* Numbers in R a generally treated as numeric objects
+* If you explictly want an integer, you need to specify the L, suffix
+* There is also a special number Inf which represent infinity 
+* The value NaN represents an Undefined value, NaN can also be thought of as a missing value
+
+#### Attributes 
+R objeccts can have attributes
+* names, dimnames(dimension names)
+* dimensions
+* class
+* length
+* Other user-defined attributes/metadata
+
+Attributes of an object can be accessed using the attributes() function
+
