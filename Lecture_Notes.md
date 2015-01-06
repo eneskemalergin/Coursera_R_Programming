@@ -97,3 +97,40 @@ Standart Texts:
 Other Resources:
 * Springer has a series of books called Use R!.
 * A longer list of books is at http://www.r-project.org/doc/bib/R-books.html
+
+==================================================================
+## R Console Input and Evaluation
+### Entering Input
+
+<- Symbol is the assignment operator
+```R
+x <- 1
+print(x)
+# or 
+x
+# will print the same result in the console 
+msg <- "hello"
+msg
+# Comments are ignored...
+```
+x <- ## Incomplete expression
+"hello" is character vector, we call it character not string...
+
+### Evaluation 
+? What is the difference between >x , >print(x) 
+
+```R
+x <- 1 # Nothing printed
+x # auto-printing occurs
+print(x) # explicit printing
+```
+[1] indicates that x is a vector and 5 is the first element
+
+```R
+x <- 1:20 # colon operator is used for creating a sequence
+x
+```
+: colon operator is used for creating a sequence
+=============================================================
+## R data Types
+### Objects and Attributes
