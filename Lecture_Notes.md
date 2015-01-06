@@ -414,3 +414,87 @@ m
 # a 1 3
 # b 2 4
 ```
+***
+
+## Reading Tabular Data
+### Reading Data 
+There are few principal functions reading data into R.
+* _read.table_, _read.csv_, for __reading tabular data__
+* _readlines_, for reading lines of a __text file__
+* source, for reading in R code files (inverse of dump)
+* dget, for reading in R code file (inverse of dput)
+* load, for reading in saved workspaces
+* unserialize, for reading single R objects in binary form
+
+### Writing Data
+There are analogous functions for writing data to files
+* write.table
+* writeLines
+* dump
+* dput
+* save 
+* serialize
+
+#### Reading Data Files with read.table
+The read.table function is one of the most commonly used functions for reading data. It has a few important arguments:
+* _file_, the name of a file, or a connection
+* _header_, logical indicating if the file has a header line
+* _sep_, a string indicating how the columns are separated
+* _colClasses_, a character vector indicating the class of each column in the dataset
+* _nrows_, the number of rows in the dataset
+* _comment.char_, a character strung indicating the comment character
+* _skip_, the number of lines to skip from the beginning
+* _stringAsFactors_, should character variables be coded as factors?
+
+> For small to moderately sized datasets, you can usually call read.table without specifying any other arguments
+
+```R
+# This is how you put data of foo.txt inside the data variable 
+data <- read.table("foo.txt")
+```
+R will automatically
+* Skip lines that begin with a #
+* Figure out how many rows there are (and how much memory needs to be allocated)
+* figure what type of variable is in each column of the table Tellin R all these things directly makes R run faster and more efficiently
+* read.csv is identical to read. table except that the default separator is a comma.
+
+***
+
+## Reading Large Tables
+### Reading Larger Datasets with read.table
+ With much larger datasets, doing the following things will make your life easier and will prevent R form choking
+* Read the help page for read.table, which contains many hints
+* Make a rough calculation of the memory required to store you dataset. If the dataset is larger than the amount of RAM on you computer, you can probably stop right here.
+* Set comment.char = "" if there are no commented lines in your file
+* Use the colClasses argument. Specifiyin this option instead of using the default can make 'read.table' run MUCH faster, often twice as fast. In order to use this option, you have to know the class of each column in your data frame. If all of the columns are "numeric", for example then you can just set colClasses = "numeric". Aquick and dirty way to figure out the classes of each column is the following:
+
+```R
+initial <- read.table("datatable.txt", nrows = 100)
+classses <- sapply(initial, class)
+tabAll <- read.table("datatable.txt",
+                      colClasses = classes)
+
+```
+* Set nrows. This doesn't make R faster but it helps with memory usage. A mild overestimate is okay. You can use the Unix tool wc to calculate the number of lines in a file.
+
+### Know The System
+In general, when using R with larger datasets, it's useful to know a few things about your system.
+* How much memory is available?
+* What other applications are in use?
+* Are there other users logged into the same system?
+* What operating system?
+* Is the OS 32 or 64 bit?
+
+### Calculating Memory Requirements
+
+Hypothhetically we have a data with 1,500,000 rows and 120 columns, all of which are numeric data. Roughly, how much memory is required to stor this data frame?
+1500000 * 120 * 8 (bytes/numeric)
+=1440000000 bytes
+=1440000000 / 2^20 bytes/MB
+= 1373.29MB
+= 1.34 GB
+
+Before working on your data set it will be very helpful to calculate approximately the size of the file and see if your computer has enough memory for that :)
+
+***
+
