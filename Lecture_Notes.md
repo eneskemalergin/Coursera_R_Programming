@@ -165,3 +165,145 @@ R objeccts can have attributes
 
 Attributes of an object can be accessed using the attributes() function
 
+***
+
+### Vectors and Lists
+
+c() function is another function for creating vectors <personally I use c() (EKE)>
+```R
+x <- c(0.5, 0.6)      ## Numeric
+x <- c(TRUE, FALSE)   ## Logical
+x <- c(T, F)          ## Logical
+x <- c("a", "b", "c") ## Character
+x <- 9:29             ## Integer
+x <- c(1+0i, 2+4i)    ## Complex
+
+# But if we want to use vector()
+
+x <- vector("numeric", length = 10)
+x
+# as you can see from the result it initiate the default values
+```
+
+#### Mixing Objects 
+
+What if we have mix the objects and concatenate them?
+
+```R
+y <- c(1.7, "a")  ## Character
+y <- c(TRUE, 2)   ## Numeric
+y <- c("a", TRUE) ## Character
+
+```
+R create a least common denominator vector if we mixed the objects
+then the other objects are converting to that least common object type...
+
+When different objects are mixed in a vector, coercion occurs so that every element in the vector is of the same class
+
+#### Explicit Coercion
+Objects can be explicitly coerced from one class to another usign the as.* functions, if available
+
+Here is a little example of explicit coercion...
+```R
+x <- 0:6
+class(x)
+# [1] "integer"
+as.numeric(x)
+# [1] 0 1 2 3 4 5 6
+as.logical(x)
+# [1] FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+as.character(x)
+# [1] "0" "1" "2" "3" "4" "5" "6"
+
+```
+But sometimes the coercion does not make that much sense as in the example above.
+
+```R
+x <- c("a", "b", "c")
+as.numeric(x)
+# [1] NA NA NA
+# Warning message:
+# NAs introduced by coercion
+as.logical(x)
+# [1] NA NA NA
+```
+
+#### Lists
+Lists are a special type of vector that can containn elements of different classes. Lists are very important data type in R and you should get to know them well.
+
+```R
+x <- list(1, "a", TRUE, 1+4i)
+x
+"[[1]]
+[1] 1
+
+[[2]]
+[1] "a"
+
+[[3]]
+[1] TRUE
+
+[[4]]
+[1] 1+4i"
+```
+#### Matrices
+Matrices are vectors with a dimension attribute. The dimension attribute is itself an integer vector of lenght 2(nrow, ncol)
+First attribute is for rows, second one is for column
+
+```R
+m <- matrix(nrow = 2, ncol = 3)
+m
+#      [,1] [,2] [,3]
+# [1,]   NA   NA   NA
+# [2,]   NA   NA   NA
+dim(m)
+# [1] 2 3 
+attributes(m)
+# $dim
+# [1] 2 3
+```
+First we create an empty matrix of 2 rows and 3 columns
+They labeled with their number of rows, and columns
+dim() functions shows us the how many rows and columns in the matrix
+attributes() shows the attributes that have used in the function in result first line $dim then the result from dim() function
+
+- Matrices are constructed comun-wise, so entries can be thought of starting in the "upper left" corner and running down the columns.
+
+```R 
+m <- matrix(1:6, nrow = 2, ncol = 3)
+m
+#      [,1] [,2] [,3]
+# [1,]    1    3    5
+# [2,]    2    4    6
+
+```
+We can also create a matrix by creating the dimension attribute, for instance:
+
+```R
+m <- 1:10
+m
+# [1]  1  2  3  4  5  6  7  8  9 10
+dim(m) <- c(2,5)
+m
+#      [,1] [,2] [,3] [,4] [,5]
+# [1,]    1    3    5    7    9
+# [2,]    2    4    6    8   10
+
+```
+
+Another and more common way of creating a matrix is binding columns and binding rows using cbind(), rbind()
+for instance:
+```R
+x <- 1:3
+y <- 10:12
+cbind(x,y)
+#      x  y
+# [1,] 1 10
+# [2,] 2 11
+# [3,] 3 12
+rbind(x,y)
+#   [,1] [,2] [,3]
+# x    1    2    3
+# y   10   11   12
+
+```
