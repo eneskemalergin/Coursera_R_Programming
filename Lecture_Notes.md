@@ -662,3 +662,108 @@ x[[1]][[3]]
 x[[c(2, 1)]]
 # [1] 3.14
 ```
+
+### Subsetting a Matrix
+Matrices can be subsetted in the useal way with (i,j) type indicates
+
+```R
+x <- matrix(1:6, 2, 3)
+x [1,2]
+# [1] 3
+
+x[2,1]
+# [1] 2
+
+x[1, ] # Takes all elements in the row 1
+# [1] 1 3 5
+
+x[, 2] # Takes all elements in the column 2
+# [1] 3 4
+```
+
+By default, when a single element of a matrix is retrieved, it is returned as a vector of length 1 rather than a 1 x 1 matrix. This behavior can be turned off by setting drop = FALSE.
+
+```R
+x <- matrix(1:6, 2, 3)
+x[1, 2]
+# [1] 3
+
+x[1, 2, drop = FALSE]
+#       [,1]
+# [1,]  3
+```
+
+
+### Subsetting with Names
+#### Partial Matching 
+Partial matching of names is allowed with "[[" and "$"
+
+```R
+x <- list(aardvark = 1:5)
+x$a ## It worked, it matched with a
+# [1] 1 2 3 4 5
+
+x[["a"]]  ## However it won't work for brackets
+# NULL  
+
+x[["a", exact = FALSE]] ## This time worked...
+# [1] 1 2 3 4 5
+
+```
+
+### Removing NA values
+A common task is to remove missing values (NAs)
+
+We should get rid of them for more clear data...
+```R 
+x <- c(1, 2, NA, 4, NA, 5)
+bad <- is.na(x)
+x[!bad] ## It takes values other than the values in bad variable
+# [1] 1 2 4 5
+```
+
+What if there are multiple vectors and object to get rid of the NAs from.
+
+```R
+x <- c(1, 2, NA, 4, Na, 5)
+y <- c("a", "b", NA, "d", NA, "f")
+good <- complete.cases(x, y)
+good
+# [1]  TRUE  TRUE FALSE  TRUE FALSE  TRUE
+
+x[good]
+# [1] 1 2 4 5
+
+y[good]
+# [1] "a" "b" "d" "f"
+
+```
+
+***
+
+## Vectorized Operation
+
+Many operations in R are vectorized making code more efficient, concise, and easier to read.
+
+```R
+x <- 1:4; y <-6:9 ## Using Semi-colon
+x + y
+# [1]  7  9 11 13
+
+x > 2
+# [1] FALSE FALSE  TRUE  TRUE
+
+y == 8
+# [1] FALSE FALSE  TRUE FALSE
+
+x * y
+# [1]  6 14 24 36
+
+```
+#####Introduction swirl
+
+To install swirl package 
+> * install.packages("swirl")
+  * library("swirl") and that's it you are ready to learn by your self with the friendly environment of R...
+
+Finished...
