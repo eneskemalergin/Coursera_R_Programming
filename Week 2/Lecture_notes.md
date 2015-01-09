@@ -100,3 +100,58 @@ while(count < 10){
 }
 ```
 We have to be more careful on while loops because they can potentially result in infinite loops if not written properly. Use with care!
+
+You can test multiple conditions in while loop like;
+```R
+z <- 5 
+while(z >= 3 && z <= 10){
+    print(z)
+    coin <- rbinom(1,1,0.5)
+    
+    if(coin == 1){  ## Randomizing
+        z <- z + 1 
+    }else{
+      z < z - 1
+    }
+}
+# Z values go up-down until it evaluates the less than 3 or bigger than 10...
+```
+Executions are always evaluated from left to right
+
+### Repeat
+Repeat initiates an infinite loop; these are not commonly used in statistical applications but they do have their uses. The only way to exit a repeat loop is to call break.
+
+It is not commonly use is but there are some ways that could be useful sometime 
+```R
+x0 <- 1
+tol <- 1e-8
+repeat{
+    x1 <-computeEstimate() # is not a real function
+    if(abs(x1-x0) < tol){
+        break
+    }else{
+        x0 <- x1
+    }
+}
+```
+This is very oftenly algorithm template used in estimation and optimization algorithms.
+
+The example above is bit dangerous because there's no guarantee it will stop. Better to set a hard limit on the number of iterations and then report whether converge was archived or not.
+
+ ### next, return
+ next is used to skip an iteration of a loop
+```R
+for(i in 1:100){
+    if(i <= 20){
+      ## Skip the first 20 iterations
+      next
+    }
+    ## Do something here
+} 
+```
+return signals that a function should exit and return a given value.
+
+### Summary
+* COntrol structures like if, while, and for allow you to control the flow of an R program
+* Infinite loops should generally be avoided, even if they are theoretically correct.
+* Control structures mentioned here are primarily useful for writing  programs; for command-line interactive work, the *apply functions are more useful.
