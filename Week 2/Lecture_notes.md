@@ -155,3 +155,81 @@ return signals that a function should exit and return a given value.
 * COntrol structures like if, while, and for allow you to control the flow of an R program
 * Infinite loops should generally be avoided, even if they are theoretically correct.
 * Control structures mentioned here are primarily useful for writing  programs; for command-line interactive work, the *apply functions are more useful.
+
+## Functions
+Functions are  created sing the function() directiove and are stored as R objects just like anything else. In particular, they are R objects of class "function".
+
+Here is a function syntax:
+```R
+f <- function(<arguments>){
+    ## Do something
+}
+```
+Functions in R are "First class objects", which means that they can be treated much like any other R object. Importantly,
+* Functions can be passed as argument to other functions
+* Functions can be nested, so that you can define a function inside of another function. The return value of a function is the last expression in the function body to be evaluated.
+
+### Function Arguments
+Functions have named arguments which potentially have default values.
+* The formal arguments are the arguments included in the function definition
+* The formals functions returns a list of all the formal arguments of a function
+* Not every function call in R makes use of all the formal arguments
+* Function arguments can be missing or might have default values
+
+### Argument Matching 
+R functions arguments can be matched positionally or by name. So the following calls to sd are all equivalent
+
+```R
+mydata <- rnorm(100)
+sd(mydata)
+sd(x = mydata)
+sd(x = mydata, na.rm = FALSE)
+sd(na.rm = FALSE, x = mydata)
+sd(na.rm = FALSE, mydata)
+```
+Even though it's legal, I don'r recommend messing around with the order of the arguments too much, since it can lead some confusion.
+
+
+You can mix positional matching by name. When an argument is matched by name, it is "taken out" of the argument list and the remaining unnamed arguments are matched in the order that they are listed in the function definition.
+
+### Defining a Function
+
+```R
+f <- function(a, b = 1, c = 2, d = NULL){
+
+}
+```
+In addition to not specifying a default value, you can  also set an argument value to NULL.
+
+### Lazy Evaluation
+Arguments to function are evaluated lazily, so they are evaluated only as needed.
+```R
+f <- function(a,b){
+    a^2
+}
+f(2)
+# 4
+```
+This function never actually uses the argument b, so calling f(2) will not produce an error because the 2 get positionally matched to a.
+
+```R 
+f <- function(a,b){
+    print (a)
+    print (b)
+}
+f(45)
+# [1] 45
+# Error: argument "b" is missing, with no default.
+```
+45 got printed, when the we go to print(b) error occured.
+
+### The "..." Argument
+The ... argument indicate a variable number of arguments that are usually passed on to other functions.
+* ... is often used when extending another function an you don't want to copy the entire argument list of the original function.
+
+```R
+myplot <- function(x,y, type = "1", ...){
+      plot(x,y, type = type, ...)
+}
+```
+* Generic functions use ... so that extra arguments can be passed to methods
