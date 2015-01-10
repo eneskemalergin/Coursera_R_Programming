@@ -23,4 +23,80 @@ list.files("diet_data")
 # Reads the file called Andy.csv and store it into the andy variable
 andy <- read.csv("diet_data/Andy.csv")
 head(andy)
-#We have 4 columns in 
+# We have 4 columns in 
+
+# Let's look at how many row are there by looking at the length of one variable
+length(andy$Age) # We have 30 rows
+
+# Or we can look at the dimensions of the data.frame
+dim(andy)
+# [1] 30 4
+
+str(andy) # shows the data frame values
+# 'data.frame':  30 obs. of  4 variables:
+# $ Patient.Name: Factor w/ 1 level "Andy": 1 1 1 1 1 1 1 1 1 1 ...
+# $ Age         : int  30 30 30 30 30 30 30 30 30 30 ...
+# $ Weight      : int  140 140 140 139 138 138 138 138 138 138 ...
+# $ Day         : int  1 2 3 4 5 6 7 8 9 10 ...
+summary(andy)
+#  Patient.Name      Age         Weight           Day       
+# Andy:30      Min.   :30   Min.   :135.0   Min.   : 1.00  
+# 1st Qu.:30   1st Qu.:137.0   1st Qu.: 8.25  
+# Median :30   Median :137.5   Median :15.50  
+# Mean   :30   Mean   :137.3   Mean   :15.50  
+# 3rd Qu.:30   3rd Qu.:138.0   3rd Qu.:22.75  
+# Max.   :30   Max.   :140.0   Max.   :30.00
+names(andy)
+# [1] "Patient.Name" "Age"          "Weight"       "Day"         
+
+# We can subset the data
+andy[1,"Weight"] #Takes the first row of weight column / meaning that weight of the first day
+
+andy[30, "Weight"] # Last day of the diet
+# Alternatively
+andy[which(andy$Day == 30), "Weight"]
+andy[which(andy[,"Day"] == 30), "Weight"]
+# or using subset() function
+subset(andy$Weight, andy$Day==30)
+
+# Let's assign Andy's starting and ending weight to vectors
+andy_start <- andy[1, "Weight"]
+andy_end <- andy[30, "Weight"]
+
+# We can find how much weight he lost by substracting vectors:
+andy_loss <- andy_start - andy_end
+andy_loss
+
+
+# But if we want to look at other subjects or maybe even everybody at once?
+files <- list.files("diet_data")
+files
+# 'files' is now a list 
+# We can call specific file using 
+files[1]
+files[2]
+files[3:5]
+head(read.csv(files[3]))
+# It did not work what we can do about it?
+# We should have the file path also full.names = TRUE will give us that.
+files_full <- list.files("diet_data", full.names=TRUE)
+files_full
+
+head(read.csv(files_full[3]))
+# Now it worked
+
+
+# We can create one big data frame with everybody's data in it...
+andy_david <- rbind(andy, read.csv(files_full[2]))
+head(andy_david)
+tail(andy_david)
+
+"One thing to note, rbind needs 2 arguments. The first is an existing
+data frame and the second is what you want to append to it.
+This means that there are occassions when you might want to create
+an empty data frame just so there's something to use as the existing
+data frame in the rbind argument. "
+
+# Let's create a subset of the data frame that shows us just the 25th day for Andy and David.
+day_25 <- andy_david[which(andy_david$Day == 25), ]
+day_25
