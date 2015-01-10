@@ -228,8 +228,67 @@ The ... argument indicate a variable number of arguments that are usually passed
 * ... is often used when extending another function an you don't want to copy the entire argument list of the original function.
 
 ```R
-myplot <- function(x,y, type = "1", ...){
+myplot <- function(x,y, type = "l", ...){
       plot(x,y, type = type, ...)
 }
 ```
 * Generic functions use ... so that extra arguments can be passed to methods
+
+
+The ... argument is also necessary when the number of arguments passes to the function cannot be known in advance
+
+```R
+args(paste)
+# function(..., sep = " ", collapse = NULL)
+
+args(cat)
+# function(..., file = " ", sep = " ", fill = FALSE)
+      labels = NULL, append = FALSE
+```
+
+
+## Scoping Rules
+### A Diversion on Binding Values to Symbol
+How does R know which value to assign to which symbol? When I type
+```R
+lm <- function(x) {x * x}
+lm
+# function(x) {x * x}
+```
+how does R know what value to assign to the symbol lm? Why doesn't it give it the value of lm that is in the stats package?
+  
+When R tries to bind a value to a symbol,it searches through a series of environments to find the appropriate value. When you are working on the command line and need to retrieve the value of an R object, the order is roughly 
+1.  Search the glbal environment for a symbol name matching the one requested.
+2.  Search the namespaces of each of the packages on the __search__ list
+```R
+search()
+#  [1] ".GlobalEnv"        "tools:rstudio"     "package:stats"    
+#  [4] "package:graphics"  "package:grDevices" "package:utils"    
+#  [7] "package:datasets"  "package:methods"   "Autoloads"        
+# [10] "package:base"    
+```
+They are all packages that are now available in R.
+
+### Binding Values to Symbol
+* The global environment or the user's workspace is always the first element of the search list and the base package is always the last.
+* The order of the packages on the search lost matters!
+* User's can configure which packages gegt loaded on startup so you cannont assume that there will be a set list of packages available.
+* When a user loads a package with library the namespace of that package gets put in position 2 of the search list(by default) and everything else get shifted down the list.
+* Note that R has separate namespaces for functions and non-functions so it's possible to have an object named c and a function named c.
+
+### Scoping Rules
+The scoping rules R are the main feature that make is different from the original S language.
+* The scoping rule determine how a value is associated with a free variable in a function
+* R uses lexical scoping or static scoping. A common alterantive is dynamic scoping
+* Related to the scoping rules is how R uses the search list to bind a value to a symbol
+* Lexical scoping turns out to be particularly useful for simplifying statistical computations
+### Lexical Scoping
+
+```R
+f <- function(x,y){
+    x^2 + y / z
+}
+```
+This function has 2 formal arguments x and y. In the body of the function there is another symbol z. In this case z is called a free variable. The scoping rule of a language determine how values are assigned to free variables. Free variables are not formal arguments and are not local variables
+
+> (Not yet finished)
