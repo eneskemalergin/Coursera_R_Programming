@@ -100,3 +100,41 @@ data frame in the rbind argument. "
 # Let's create a subset of the data frame that shows us just the 25th day for Andy and David.
 day_25 <- andy_david[which(andy_david$Day == 25), ]
 day_25
+
+dat <- data.frame()
+for (i in 1:5) {
+  dat <- rbind(dat, read.csv(files_full[i]))
+}
+str(dat)
+# We have now a data frame called dat with all data combined. 
+# 150 obs. and 4 variable
+
+
+#So what if we wanted to know the median weight for all the data? Let's use the median() function.
+median(dat$Weight)
+# We got NA because we have some values NA in dat.
+median(dat$Weight, na.rm = TRUE)
+# 190 thats the result without NAs
+
+# It filters the only 30th day of each data
+dat_30 <- dat[which(dat[, "Day"] == 30),]
+dat_30
+median(dat_30$Weight)  # get the median of all
+
+weightmedian <- function(directory, day)  {
+  files_list <- list.files(directory, full.names=TRUE)   #creates a list of files
+  dat <- data.frame()                             #creates an empty data frame
+  for (i in 1:5) {                                
+      #loops through the files, rbinding them together 
+      dat <- rbind(dat, read.csv(files_list[i]))
+  }
+  dat_subset <- dat[which(dat[, "Day"] == day),]  #subsets the rows that match the 'day' argument
+  median(dat_subset[, "Weight"], na.rm=TRUE)      #identifies the median weight 
+  #while stripping out the NAs
+}
+
+# Test our function:
+weightmedian(directory = "diet_data", day = 20)
+weightmedian("diet_data", 4)
+weightmedian("diet_data", 17)
+
