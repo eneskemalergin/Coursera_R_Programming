@@ -1,6 +1,6 @@
 # R Programming Week 2
 
-## Control Strunctures
+## Control Structures
 ### Starting
 Control structures allow you to control the R functionality
 Basic COntrol Strunctures:
