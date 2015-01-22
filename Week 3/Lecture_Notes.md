@@ -223,3 +223,110 @@ rowMeans(a, dims = 2)
 # [1,] -0.55729462 0.4440610
 # [2,] -0.06775198 0.5431922
 ```
+
+### mapply
+mapply is a multivariable apply of sorts which applies a function in parallel over a set of arguments.
+
+```R
+str(mapply)
+# function (FUN, ..., MoreArgs = NULL, SIMPLIFY = TRUE, USE.NAMES = TRUE)  
+```
+  - FUN is a function to apply
+  - ... contains arguments to apply over
+  - MoreArgs is a list of other arguments to FUN
+  - SIMPLIFY indicates whether the result should be simplified
+
+Instead of typing all this:
+``` list(rep(1,4), rep(2,3), rep(3,2), rep(4,1))```
+we can do this:
+```R
+# rep() is replicate 1 4 times, 2 3 times, 3 2 times, 4 1 times
+mapply(rep, 1:4, 4:1)
+# [[1]]
+# [1] 1 1 1 1
+# 
+# [[2]]
+# [1] 2 2 2
+#
+# [[3]]
+# [1] 3 3
+#
+# [[4]]
+# [1] 4
+```
+Vectorizing a function:
+```R
+noise <- function(n, mean, sd){
+  rnorm(n, mean , sd)
+}
+noise(5,1, 2)
+# [1] -0.6611821  3.8091464 -1.6119299  2.4388754  1.3643766
+
+## It does not work properly in vectors.
+noise(1:5, 1:5, 2)
+# [1] 1.9974292 0.7131684 0.6395910 3.9886584 3.9109822
+
+mapply(noise, 1:5, 1:5, 2)
+# [[1]]
+# [1] 1.685575
+#
+# [[2]]
+# [1] 3.1817632 0.9439226
+# 
+# [[3]]
+# [1] 0.5475442 1.9490630 5.3739280
+#
+# [[4]]
+# [1] 2.347929 2.617430 5.426848 4.201613
+#
+# [[5]]
+# [1] 5.834787 5.763151 4.631828 6.083219 6.020251
+```
+
+### tapply
+tapply is used to apply a function over subsets of a vector. I don't know why it's called tapply.
+```R
+str(tapply)
+# function (X, INDEX, FUN = NULL, ..., simplify = TRUE)  
+```
+  - X is a vector 
+  - INDEX is a factor or a list of factors(or else they are coerced to factors)
+  - FUn is a function to be applied
+  - ... contains other arguments to be passed FUN
+  -  simplify, shoud we simplify the result?
+
+Take group means.
+```R
+x <- c(rnorm(10), runif(10), rnorm(10,1))
+f <- gl(3, 10)
+f
+#  [1] 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 3 3 3 3 3 3 3 3 3 3
+# Levels: 1 2 3
+tapply(x, f, mean)  
+#          1          2          3 
+# 0.08734528 0.34979459 0.68139367 
+``` 
+If we don't simplify the result we get back is a list, default is simplify = TRUE
+```R
+tapply(x, f, mean, simplify = FALSE)
+# $`1`
+# [1] 0.08734528
+#
+# $`2`
+# [1] 0.3497946
+#
+# $`3`
+# [1] 0.6813937
+```
+Find Group ranges:
+```R
+tapply(x, f, range)
+# $`1`
+# [1] -1.360645  1.339102
+#
+# $`2`
+# [1] 0.002025325 0.879441105
+# 
+# $`3`
+# [1] -0.6127712  2.5695966
+``` 
