@@ -153,3 +153,73 @@ sapply(x, mean)
 # 2.5000000 0.2428402 0.8357302 4.9501217
 ```
 If we directly apply ``` mean(x) ```   it won't work because we cannot directly apply mean function into the lists.
+
+### apply
+apply is used to evaluate a function(often an anonymous one) over the margins of an array.
+
+* It is most often used to apply a function to the rows or columns of a matrix
+* It can be used with general arrays, e.g. taking the average of an array of matrices
+* It is not really faster than writing a loop, but it works in one line!
+
+apply is good because it requires less typing.
+
+``` function(X, MARGIN, FUN, ...)
+
+- x is an array
+- MARGIN is an integer vector indicating which margins should be "retained".
+- FUN is a function to be applied
+- ... is for other arguments to be passed to FUN
+
+```R
+x <- matrix(rnorm(200), 20, 10)
+## Take the margin 2 in matrix x and take the mean of each.
+apply(x, 2, mean)
+#  [1] -0.22600687  0.10885446  0.18228176  0.14683678  0.14616253
+#  [6] -0.29235713 -0.14402982  0.32431063  0.07001221 -0.36437337
+
+##  
+apply(x, 1, sum)
+```
+
+for sums and means of matrix dimensions, we have some shortcuts.
+    - rowSums = apply(x, 1, sum)
+    - rowMeans = apply(x, 1, mean)
+    - colSums = apply(x, 2, sum)
+    - colMeans = apply(x, 2, mean)
+    
+The shortcut functions are much faster, but you won't notice unless you are using a large matrix.
+
+There are some other ways to Apply: Quantiles of the rows of a matrix.
+
+To calculate the 25th and 75th percentile of the first columns of the matrix:
+```R
+x <- matrix(rnorm(200), 20, 10)
+apply(x, 1, quantile, probs = c(0.25, 0.75))
+#           [,1]       [,2]       [,3]      [,4]       [,5]      [,6]
+# 25% -0.5840000 -0.3905206 -1.0762700 0.5007426 -0.3367990 -0.204846
+# 75%  0.3758081  0.4566281 -0.1782749 0.6833329  0.8163684  0.958207
+#           [,7]       [,8]       [,9]      [,10]      [,11]      [,12]
+# 25% -1.1015388 -0.3440276 -0.6464199 -0.3366482 -0.4939451 -0? .4411552
+# 75%  0.6335795  0.9842750  0.7518729  1.8275175 -0.0172151  0.7617142
+#           [,13]      [,14]      [,15]      [,16]      [,17]      [,18]
+# 25% -0.96037093 -0.6430699 -1.4565126 -0.5515414 -0.2858509 -0.6767940
+# 75%  0.04626564  0.4294941  0.1019581  0.4358955  0.5382621  0.8083852
+#          [,19]      [,20]
+# 25% -0.3552388 -1.1830930
+# 75%  0.4772754  0.8467398
+```
+Average matrix in an array
+```R 
+a <- array(rnorm(2 * 2 * 10), c(2,2,10))
+apply(a, c(1,2), mean)
+#             [,1]      [,2]
+# [1,] -0.55729462 0.4440610
+# [2,] -0.06775198 0.5431922
+
+## OR
+
+rowMeans(a, dims = 2)
+#             [,1]      [,2]
+# [1,] -0.55729462 0.4440610
+# [2,] -0.06775198 0.5431922
+```
