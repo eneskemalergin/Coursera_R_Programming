@@ -460,3 +460,14 @@ How do we know that something is wrong with your function?
 * Were your expectations correct in the first place?
 * Can you reproduce the problem?
 
+### Basic Tools 
+The primary tools for debugging functions in R are:
+
+* ```traceback``` :prints out the function call stack after an error occurs; does nothing if there's no error
+* ```debug``` : flags a function for "debug" mode which allows you to step through execution of a function one line at a time
+* ```browser``` : suspends the execution of a function whereever it is called and puts the function in debug mode.
+* ```trace``` : allows you to insert debugging code into a function a specific places
+* ```recover``` : allows you to modify the error behaviour so that you can browse the function call stack
+
+These are the interactive tools specifically designed to allow you to pick through a function.There's also the more blunt technique of inserting print/cat statements in the function.
+
