@@ -471,3 +471,21 @@ The primary tools for debugging functions in R are:
 
 These are the interactive tools specifically designed to allow you to pick through a function.There's also the more blunt technique of inserting print/cat statements in the function.
 
+--- 
+
+#### Traceback
+```R
+mean(x)
+#Error in mean(x) : object 'x' not found
+traceback() # Points out where the error occured...
+# 1: mean()
+```
+---
+
+#### debug
+```R
+debug(lm)
+lm(y - x)
+# It opens up very handy tool to find bug
+# When it get to the line where error occur.
+```
