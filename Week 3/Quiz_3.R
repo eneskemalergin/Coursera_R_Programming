@@ -4,16 +4,21 @@ library(datasets)
 data(iris)
 ?iris
 iris
-mean(iris$Sepal.Length)
-# OR
 
-apply(iris[, 1:4], 1, mean)
+s <- split(iris, iris$Species)
+lapply(s, function(x) colMeans(x[, c("Sepal.Length","Sepal.Width","Petal.Length","Petal.Width")]))
+
+apply(iris[, 1:4], 2, mean)
 
 data(mtcars)
 mtcars
 
-sapply(split(mtcars$mpg, mtcars$cyl), mean)
+with(mtcars, tapply(mpg, cyl, mean))
+tapply(mtcars$mpg, mtcars$cyl, mean)
 
+
+with(mtcars, tapply(hp, cyl, mean))
+tapply(mtcars$hp, mtcars$cyl, mean)
 
 debug(ls)
 ls()
