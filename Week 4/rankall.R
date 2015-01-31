@@ -1,56 +1,34 @@
-num_helper <- function(state_subset, col_num, num) {
-  # get "attack", "failure" and "pneumonia" vector
-  outcome_arr <- as.numeric(state_subset[, col_num])
-  len <- dim(state_subset[!is.na(outcome_arr), ])[1]
-  if (num == "best") {
-    rank <- rank_helper(state_subset, outcome_arr, 1)
-  } else if (num == "worst") {
-    rank <- rank_helper(state_subset, outcome_arr, len)
-  } else if (num > len) {
-    rank <- NA
-  } else {
-    rank <- rank_helper(state_subset, outcome_arr, num)
-  }
-  result <- rank
-  return(result)
-}
-rank_helper <- function(state_subset, outcome_arr, num) {
-  result <- state_subset[, 2][order(outcome_arr, state_subset[, 2])[num]]
-  return(result)
-}
+# Author: rfoxfa
+
 rankall <- function(outcome, num = "best") {
-  ## Read outcome data
-  ## Check that state and outcome are valid
-  ## For each state, find the hospital of the given rank
-  ## Return a data frame with the hospital names and the
-  ## (abbreviated) state name
-  # read the data file
-  directory <- "./data/outcome-of-care-measures.csv"
-  data <- read.csv(directory, colClasses="character")
+  ## Reads outcome data
+  file_data <- read.csv("outcome-of-care-measures.csv", sep = ",")
+  ## Checks that state and outcome are valid
+  valid_states <- c("AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "MD", "ME", "MI", "MN", "MO", "MS", "MT", "NC", "ND", "NE", "NH", "NJ", "NM", "NV", "NY", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VA", "VT", "WA", "WI", "WV", "WY")
   valid_outcomes <- c("heart attack", "heart failure", "pneumonia")
-  state_arr <- sort(unique(data$State))
-  arr_len <- length(state_arr)
-  hospital <- rep("", arr_len)
-  if (!outcome %in% valid_outcomes) {
-    stop("invalid outcome")
-  } else {
-    for(i in 1:arr_len) {
-      # loop for each state
-      state_subset <- data[data[, 7]==state_arr[i], ]
-      if(outcome == "heart attack") {
-        hospital[i] <- num_helper(state_subset, 11, num)
-      } else if (outcome == "heart failure") {
-        hospital[i] <- num_helper(state_subset, 17, num)
-      } else {
-        hospital[i] <- num_helper(state_subset, 23, num)
-      }
+  if (!is.element(outcome, valid_outcomes)) stop("invalid outcome")
+  header_name <- NULL
+  if (outcome == "heart attack") header_name <- "Hospital.30.Day.Death..Mortality..Rates.from.Heart.Attack"
+  else if (outcome == "heart failure") header_name <- "Hospital.30.Day.Death..Mortality..Rates.from.Heart.Failure"
+  else header_name <- "Hospital.30.Day.Death..Mortality..Rates.from.Pneumonia"
+  hosps <- c()
+  states <- c()
+  ## For each state, finds the hospital of the given rank
+  for (state in valid_states) {
+    ranked_hosp <- c()
+    data <- file_data[file_data$State == state,]
+    sorted_data <- data[order(as.numeric(as.character(data[,header_name])), as.character(data[,"Hospital.Name"])),]
+    sorted_data <- sorted_data[!sorted_data[,header_name] == "Not Available",]
+    if (num == "best") {
+      ranked_hosp <- best(state, outcome)
+    } else if (num == "worst") {
+      ranked_hosp <- as.character(tail(sorted_data[,"Hospital.Name"], n = 1))
+    } else {
+      ranked_hosp <- as.character(sorted_data[,"Hospital.Name"][num])
     }
+    hosps <- c(hosps, ranked_hosp)
   }
-  # create the data frame to return
-  df <- data.frame(hospital=hospital, state=state_arr)
-  result <- df
+  result <- data.frame(hosps, valid_states)
+  colnames(result) <- c("hospital", "state")
   return(result)
 }
-# tests
-head(rankall("heart attack", 20), 10)
-tail(rankall("pneumonia", "worst"), 3)

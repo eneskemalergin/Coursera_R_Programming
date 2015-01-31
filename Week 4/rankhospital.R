@@ -1,52 +1,25 @@
-num_helper <- function(data, col_num, state, num) {
-  state_subset <- data[data[, 7]==state, ]
-  # get "attack", "failure" and "pneumonia" vector
-  outcome_arr <- state_subset[, col_num]
-  len <- dim(state_subset[!is.na(outcome_arr), ])[1]
-  if (num == "worst") {
-    rank <- rank_helper(state_subset, outcome_arr, len)
-  } else if (num > len) {
-    rank <- NA
-  } else {
-    rank <- rank_helper(state_subset, outcome_arr, num)
-  }
-  result <- rank
-  return(result)
-}
-rank_helper <- function(state_subset, outcome_arr, num) {
-  result <- state_subset[, 2][order(outcome_arr, state_subset[, 2])[num]]
-  return(result)
-}
+# Author: rfoxfa
+## with a Little bit of upgrade
 rankhospital <- function(state, outcome, num = "best") {
-  ## Read outcome data
-  ## Check that state and outcome are valid
-  ## Return hospital name in that state with the given rank
-  ## 30-day death rate
-  # read the data file
-  directory <- "./data/outcome-of-care-measures.csv"
-  data <- read.csv(directory, colClasses="character")
-  # change data type from character to numeric
-  data[, 11] <- as.numeric(data[, 11]) # heart attack
-  data[, 17] <- as.numeric(data[, 17]) # heart failure
-  data[, 23] <- as.numeric(data[, 23]) # pneumonia
+  ## Reads outcome data
+  file_data <- read.csv("outcome-of-care-measures.csv", sep = ",")
+  ## Checks that state and outcome are valid
+  valid_states <- c("AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY")
   valid_outcomes <- c("heart attack", "heart failure", "pneumonia")
-  if (!state %in% data$State) {
-    stop("invalid state")
-  } else if(!outcome %in% valid_outcomes) {
-    stop("invalid outcome")
-  } else {
-    if (num == "best") {
-      rank <- beast(state, outcome)
-    } else {
-      if(outcome == "heart attack") {
-        rank <- num_helper(data, 11, state, num)
-      } else if(outcome == "heart failure") {
-        rank <- num_helper(data, 17, state, num)
-      } else {
-        rank <- num_helper(data, 23, state, num)
-      }
-    }
-    result <- rank
-    return(result)
+  if (!is.element(state, valid_states)) stop("invalid state")
+  if (!is.element(outcome, valid_outcomes)) stop("invalid outcome")
+  ## Returns hospital name in that state with lowest 30-day death
+  data <- file_data[file_data$State == state,]
+  header_name <- NULL
+  if (outcome == "heart attack") header_name <- "Hospital.30.Day.Death..Mortality..Rates.from.Heart.Attack"
+  else if (outcome == "heart failure") header_name <- "Hospital.30.Day.Death..Mortality..Rates.from.Heart.Failure"
+  else header_name <- "Hospital.30.Day.Death..Mortality..Rates.from.Pneumonia"
+  sorted_data <- data[order(as.character(data[,header_name]), as.character(data[,"Hospital.Name"])),]
+  sorted_data <- sorted_data[!sorted_data[,header_name] == "Not Available",]
+  if (num == "best") {
+    return(best(state, outcome))
+  } else if (num == "worst") {
+    return(tail(as.character(sorted_data[,"Hospital.Name"]), n = 1))
   }
+  return(as.character(sorted_data[,"Hospital.Name"][num]))
 }
